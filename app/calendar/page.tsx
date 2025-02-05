@@ -1,6 +1,7 @@
 "use client"
 import CalendarView from "../components/CalendarView";
 import PageHeader from "../components/PageHeader";
+import Footer from "../components/Footer";
 import { useHabits } from "../hooks/useHabits";
 
 export default function CalendarPage() {
@@ -12,6 +13,7 @@ export default function CalendarPage() {
         <PageHeader />
         <CalendarView habits={habits} />
       </main>
+      <Footer />
     </div>
   );
 }

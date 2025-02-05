@@ -53,18 +53,32 @@ export default function CalendarView({ habits }: CalendarViewProps) {
               currentMonth.getMonth(),
               day
             ).toLocaleDateString('en-CA')
+            const isToday = new Date().toLocaleDateString('en-CA') === date
             return (
-              <div key={day} className="border p-1 sm:p-2 min-h-[4rem] sm:min-h-[6rem] flex flex-col">
+              <div 
+                key={day} 
+                className={`border p-1 sm:p-2 min-h-[4rem] sm:min-h-[6rem] flex flex-col ${
+                  isToday ? 'border-2 border-gray-600' : ''
+                }`}
+              >
                 <div className="font-bold text-xs sm:text-sm mb-1">{day}</div>
                 <div className="flex-grow overflow-y-auto space-y-1">
                   {habits.map((habit) => {
-                    return (
-                      <div key={habit.id} className="text-xs sm:text-sm">
-                        <div className={`w-full truncate p-1 sm:p-2 rounded ${habit.completedDates.includes(date) ? 'bg-neutral-100' : ''}`}>
-                          <span className="truncate">{habit.name}</span>
+                    const firstCompletionDate = habit.completedDates.length > 0 
+                      ? habit.completedDates.sort()[0] 
+                      : null;
+                    
+                    // Only show habit if there's at least one completion and current date is >= first completion
+                    if (firstCompletionDate && date >= firstCompletionDate) {
+                      return (
+                        <div key={habit.id} className="text-xs sm:text-sm">
+                          <div className={`w-full truncate p-1 sm:p-2 rounded ${habit.completedDates.includes(date) ? 'bg-red-100' : ''}`}>
+                            <span className="truncate">{habit.name}</span>
+                          </div>
                         </div>
-                      </div>
-                    )
+                      );
+                    }
+                    return null;
                   })}
                 </div>
               </div>

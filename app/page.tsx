@@ -4,10 +4,11 @@ import HabitForm from "./components/HabitForm";
 import HabitList from "./components/HabitList";
 import CalendarViewButton from "./components/CalendarViewButton";
 import PageHeader from "./components/PageHeader";
+import Footer from "./components/Footer";
 import { useHabits } from "./hooks/useHabits";
 
 export default function Home() {
-  const { habits, addHabit, toggleToday } = useHabits();
+  const { habits, addHabit, toggleToday, deleteHabit } = useHabits();
 
   return (
     <div className="grid grid-rows-[1fr_20px] justify-items-center min-h-screen p-8 gap-16 sm:p-20 font-smooch max-h-screen">
@@ -15,27 +16,15 @@ export default function Home() {
         <PageHeader />
         <div className="flex flex-col gap-6 my-auto">
            <HabitForm onAddHabit={addHabit} /> 
-           <HabitList habits={habits} onToggleToday={toggleToday} />  
+           <HabitList 
+             habits={habits} 
+             onToggleToday={toggleToday}
+             onDeleteHabit={deleteHabit}
+           />  
            <CalendarViewButton />
         </div>
       </main>
-     <footer className="flex gap-6 flex-wrap items-center justify-center row-start-2">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/code_icon.svg"
-            alt="Code icon"
-            width={16}
-            height={16}
-          />
-          See the code
-        </a>
-      </footer>
+      <Footer />
     </div>
   );
 }

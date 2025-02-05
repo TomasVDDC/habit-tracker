@@ -76,5 +76,12 @@ export function useHabits() {
     return () => clearInterval(interval);
   }, [isInitialized]);
 
-  return { habits, addHabit, toggleToday };
+  const deleteHabit = (id: string) => {
+    const newHabits = habits.filter(habit => habit.id !== id);
+    setHabits(newHabits);
+    globalHabits = newHabits;
+    localStorage.setItem('habits', JSON.stringify(newHabits));
+  };
+
+  return { habits, addHabit, toggleToday, deleteHabit };
 } 
