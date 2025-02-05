@@ -25,44 +25,52 @@ export default function CalendarView({ habits }: CalendarViewProps) {
   }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <Button onClick={prevMonth} >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <h2 className="text-xl font-bold">
-          {currentMonth.toLocaleString("default", { month: "long", year: "numeric" })}
-        </h2>
-        <Button onClick={nextMonth} >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-      <div className="grid grid-cols-7 gap-2">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-          <div key={day} className="text-center font-bold">
-            {day}
-          </div>
-        ))}
-        {blanks.map((blank) => (
-          <div key={`blank-${blank}`} className="h-24"></div>
-        ))}
-        {days.map((day) => {
-          const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day).toISOString().split("T")[0]
-          return (
-            <div key={day} className="border p-2 min-h-[6rem] flex flex-col">
-              <div className="font-bold mb-1">{day}</div>
-              <div className="flex-grow overflow-y-auto space-y-1">
-                {habits.map((habit) => (
-                  <div key={habit.id} className="text-sm">
-                    <div className={`w-full truncate p-2 rounded ${habit.completedDates.includes(date) ? 'bg-neutral-100' : ''}`}>
-                      <span className="truncate">{habit.name}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-[320px]">
+        <div className="flex justify-between items-center mb-4 px-2">
+          <Button onClick={prevMonth} className="sm:px-4 px-2">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <h2 className="text-lg sm:text-xl font-bold">
+            {currentMonth.toLocaleString("default", { month: "long", year: "numeric" })}
+          </h2>
+          <Button onClick={nextMonth} className="sm:px-4 px-2">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div key={day} className="text-center font-bold text-xs sm:text-sm">
+              {day}
             </div>
-          )
-        })}
+          ))}
+          {blanks.map((blank) => (
+            <div key={`blank-${blank}`} className="h-16 sm:h-24"></div>
+          ))}
+          {days.map((day) => {
+            const date = new Date(
+              currentMonth.getFullYear(),
+              currentMonth.getMonth(),
+              day
+            ).toLocaleDateString('en-CA')
+            return (
+              <div key={day} className="border p-1 sm:p-2 min-h-[4rem] sm:min-h-[6rem] flex flex-col">
+                <div className="font-bold text-xs sm:text-sm mb-1">{day}</div>
+                <div className="flex-grow overflow-y-auto space-y-1">
+                  {habits.map((habit) => {
+                    return (
+                      <div key={habit.id} className="text-xs sm:text-sm">
+                        <div className={`w-full truncate p-1 sm:p-2 rounded ${habit.completedDates.includes(date) ? 'bg-neutral-100' : ''}`}>
+                          <span className="truncate">{habit.name}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

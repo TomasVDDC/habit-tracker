@@ -1,24 +1,27 @@
 import { useState, useEffect } from 'react';
 import type { Habit } from '../types';
 
-// Create a single shared instance of habits
+// Keep global state outside of hook
 let globalHabits: Habit[] | null = null;
 
 export function useHabits() {
-  const [habits, setHabits] = useState<Habit[]>(() => {
-    // If we already have global habits, use those
-    if (globalHabits) return globalHabits;
-    
-    // Otherwise try to load from localStorage (only happens once)
-    if (typeof window !== 'undefined') {
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load habits from localStorage or global state only once on mount
+  useEffect(() => {
+    if (globalHabits) {
+      setHabits(globalHabits);
+    } else {
       const stored = localStorage.getItem('habits');
       if (stored) {
-        globalHabits = JSON.parse(stored);
-        return globalHabits ?? [];
+        const parsedHabits = JSON.parse(stored);
+        globalHabits = parsedHabits;
+        setHabits(parsedHabits);
       }
     }
-    return [];
-  });
+    setIsInitialized(true);
+  }, []);
 
   const addHabit = (name: string) => {
     const newHabits = [...habits, { 
@@ -29,30 +32,26 @@ export function useHabits() {
     }];
     setHabits(newHabits);
     globalHabits = newHabits;
+    localStorage.setItem('habits', JSON.stringify(newHabits));
   };
 
   const toggleToday = (id: string) => {
     const newHabits = habits.map(habit => 
       habit.id === id ? {
         ...habit,
-        completedDates: [...habit.completedDates, new Date().toISOString()],
+        completedDates: [...habit.completedDates, new Date().toISOString().split('T')[0]],
         completedToday: true
       } : habit
     );
     setHabits(newHabits);
     globalHabits = newHabits;
+    localStorage.setItem('habits', JSON.stringify(newHabits));
   };
-
-  // Save habits to localStorage whenever they change
-  useEffect(() => {
-    if (habits.length > 0 || globalHabits !== null) {
-      localStorage.setItem('habits', JSON.stringify(habits));
-      globalHabits = habits;
-    }
-  }, [habits]);
 
   // Reset completedToday flag daily
   useEffect(() => {
+    if (!isInitialized) return;
+
     const resetCompletedToday = () => {
       setHabits(currentHabits => {
         const newHabits = currentHabits.map(habit => {
@@ -67,6 +66,7 @@ export function useHabits() {
             habit;
         });
         globalHabits = newHabits;
+        localStorage.setItem('habits', JSON.stringify(newHabits));
         return newHabits;
       });
     };
@@ -74,7 +74,7 @@ export function useHabits() {
     resetCompletedToday();
     const interval = setInterval(resetCompletedToday, 1000 * 3600);
     return () => clearInterval(interval);
-  }, []);
+  }, [isInitialized]);
 
   return { habits, addHabit, toggleToday };
 } 
