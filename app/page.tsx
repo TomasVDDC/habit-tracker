@@ -1,5 +1,4 @@
 "use client"
-import Image from "next/image";
 import HabitForm from "./components/HabitForm";
 import HabitList from "./components/HabitList";
 import CalendarViewButton from "./components/CalendarViewButton";
