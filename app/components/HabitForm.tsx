@@ -16,17 +16,16 @@ export default function HabitForm({ onAddHabit }: HabitFormProps) {
       setHabitName("")
     }
   }
-
   return (
-    <form onSubmit={handleSubmit} className="flex items-center">
+    <form onSubmit={handleSubmit} className="flex items-center w-full max-w-2xl">
       <Input
         type="text"
         value={habitName}
         onChange={(e) => setHabitName(e.target.value)}
         placeholder="New habit"
-        className="mr-2"
+        className="mr-4 h-12 text-lg"
       />
-      <Button type="submit">Add</Button>
+      <Button type="submit" className="h-12 px-8 text-lg">Add</Button>
     </form>
   )
 }

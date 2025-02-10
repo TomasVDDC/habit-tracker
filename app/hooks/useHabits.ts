@@ -36,10 +36,13 @@ export function useHabits() {
   };
 
   const toggleToday = (id: string) => {
+    const today = new Date();
+    const localDate = today.toLocaleDateString('en-CA'); // Format: YYYY-MM-DD
+
     const newHabits = habits.map(habit => 
       habit.id === id ? {
         ...habit,
-        completedDates: [...habit.completedDates, new Date().toISOString().split('T')[0]],
+        completedDates: [...habit.completedDates, localDate],
         completedToday: true
       } : habit
     );
@@ -54,14 +57,14 @@ export function useHabits() {
 
     const resetCompletedToday = () => {
       setHabits(currentHabits => {
+        const today = new Date();
+        const localToday = today.toLocaleDateString('en-CA');
+
         const newHabits = currentHabits.map(habit => {
           const lastCompletedDate = habit.completedDates[habit.completedDates.length - 1];
           if (!lastCompletedDate) return habit;
 
-          const lastCompleted = new Date(lastCompletedDate).setHours(0, 0, 0, 0);
-          const today = new Date().setHours(0, 0, 0, 0);
-
-          return lastCompleted < today ? 
+          return lastCompletedDate < localToday ? 
             { ...habit, completedToday: false } : 
             habit;
         });

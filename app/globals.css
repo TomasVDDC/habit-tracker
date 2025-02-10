@@ -85,13 +85,6 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0.75rem 0;
-  margin: 0 0 0 1.85rem;
-  color: #282936;
-  font-weight: 700;
-  line-height: 1.6;
-  text-align: center;
-  text-transform: uppercase;
 }
 
 .learn-more:hover .circle {
@@ -109,8 +102,8 @@ body {
 
 /* Delete Button Animation */
 .delete-button {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: rgb(20, 20, 20);
   border: none;
@@ -123,6 +116,13 @@ body {
   transition-duration: .3s;
   overflow: hidden;
   position: relative;
+}
+
+@media (min-width: 640px) {
+  .delete-button {
+    width: 48px;
+    height: 48px;
+  }
 }
 
 .delete-icon {
